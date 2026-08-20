@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div style="padding: 3rem; text-align: center;">
+    <h2 id="welcomeMsg">Loading...</h2>
+    <button onclick="logout()">Logout</button>
+  </div>
+
+  <script>
+    // Basic protection: if no token, kick back to login
+    const token = localStorage.getItem("token");
+    if (!token) {
+      window.location.href = "login.html";
+    }
+
+    const user = JSON.parse(localStorage.getItem("user"));
+    document.getElementById("welcomeMsg").textContent = `Welcome, ${user.name}!`;
+
+    function logout() {
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      window.location.href = "login.html";
+    }
+  </script>
+</body>
+</html>
