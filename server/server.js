@@ -10,6 +10,7 @@ const authRoutes = require("./routes/authRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
 const courseRoutes = require("./routes/courseRoutes");
 const lessonRoutes = require("./routes/lessonRoutes");
+const Question = require("./models/Question");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
