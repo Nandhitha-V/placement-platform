@@ -2,24 +2,20 @@
 
 // Load environment variables from .env into process.env
 require("dotenv").config();
-const cors = require("cors");
-
-const Category = require("./models/Category");
-const Course = require("./models/Course");
-const Lesson = require("./models/Lesson");
 
 const express = require("express");
+const cors = require("cors");
 const connectDB = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
+const categoryRoutes = require("./routes/categoryRoutes");
 
 const app = express();
-app.use(cors());
 const PORT = process.env.PORT || 5000;
 
 connectDB();
 
-// This middleware lets Express read JSON data sent in request bodies (needed for req.body to work)
-app.use(express.json());
+app.use(cors());
+app.use(express.json());   // ← THIS must come before the routes below
 
 app.get("/", (req, res) => {
   res.send("Hello! The Placement Platform backend is running.");
@@ -29,8 +25,8 @@ app.get("/api/health", (req, res) => {
   res.json({ status: "ok", message: "Server is healthy" });
 });
 
-// Mount our auth routes under /api/auth
 app.use("/api/auth", authRoutes);
+app.use("/api/categories", categoryRoutes);   // ← this line's position doesn't matter as much, as long as express.json() is above it
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
