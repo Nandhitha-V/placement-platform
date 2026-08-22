@@ -82,3 +82,110 @@ body {
   margin-bottom: 1rem;
   min-height: 1.2rem;
 }
+
+.lesson-container {
+  max-width: 700px;
+  margin: 3rem auto;
+  padding: 2rem;
+}
+
+.breadcrumb {
+  color: #6366f1;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.lesson-container h1 {
+  margin-bottom: 1.5rem;
+}
+
+.lesson-content {
+  background: #1e293b;
+  padding: 1.5rem;
+  border-radius: 10px;
+  line-height: 1.7;
+}
+
+.array-widget {
+  background: #1e293b;
+  border-radius: 10px;
+  padding: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.array-widget h3 {
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+}
+
+.array-track {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.2rem;
+  flex-wrap: wrap;
+}
+
+.array-box {
+  background: #334155;
+  border: 2px solid #475569;
+  border-radius: 6px;
+  width: 60px;
+  text-align: center;
+  padding: 0.5rem 0;
+  transition: transform 0.3s ease, background 0.3s ease, border-color 0.3s ease;
+}
+
+.array-value {
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.array-index {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  margin-top: 0.3rem;
+}
+
+/* Animation: plays briefly when a box is newly inserted */
+.array-box.just-added {
+  transform: scale(1.15);
+  background: #6366f1;
+  border-color: #818cf8;
+}
+
+/* Highlight when a box is accessed by index */
+.array-box.highlighted {
+  border-color: #22c55e;
+  background: #14532d;
+}
+
+.array-controls {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.8rem;
+}
+
+.array-controls input {
+  padding: 0.5rem;
+  border-radius: 6px;
+  border: 1px solid #334155;
+  background: #0f172a;
+  color: white;
+  width: 140px;
+}
+
+.array-controls button {
+  padding: 0.5rem 1rem;
+  background: #6366f1;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.array-note {
+  color: #94a3b8;
+  font-size: 0.9rem;
+  min-height: 1.2rem;
+}
