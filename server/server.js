@@ -4,6 +4,10 @@
 require("dotenv").config();
 const cors = require("cors");
 
+const Category = require("./models/Category");
+const Course = require("./models/Course");
+const Lesson = require("./models/Lesson");
+
 const express = require("express");
 const connectDB = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
