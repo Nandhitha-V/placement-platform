@@ -11,6 +11,7 @@ const categoryRoutes = require("./routes/categoryRoutes");
 const courseRoutes = require("./routes/courseRoutes");
 const lessonRoutes = require("./routes/lessonRoutes");
 const Question = require("./models/Question");
+const questionRoutes = require("./routes/questionRoutes");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -32,6 +33,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/courses", courseRoutes);   // ← this line's position doesn't matter as much, as long as express.json() is above it
 app.use("/api/lessons", lessonRoutes);
+app.use("/api/questions", questionRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
