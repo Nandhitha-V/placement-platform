@@ -1,4 +1,4 @@
-// lesson.js — fetches and displays a single lesson
+// lesson.js — fetches and displays a single lesson, plus its quiz
 
 const params = new URLSearchParams(window.location.search);
 const lessonId = params.get("id");
@@ -27,13 +27,14 @@ async function loadLesson() {
         <p>${lesson.content}</p>
       </div>
       <div id="animationSlot"></div>
+      <div id="quizSlot"></div>
     `;
 
-    // Only render the array animation for lessons titled "Arrays"
-    // (Later, we can generalize this with a proper "animation type" field)
     if (lesson.title === "Arrays") {
       renderArrayAnimation();
     }
+
+    loadQuiz(lessonId);
   } catch (error) {
     container.innerHTML = "<p>Something went wrong. Is the server running?</p>";
   }
@@ -60,13 +61,11 @@ function renderArrayAnimation() {
     </div>
   `;
 
-  // Our in-memory array data — starts with a few example values
   let arr = [10, 20, 30];
 
   const track = document.getElementById("arrayTrack");
   const note = document.getElementById("arrayNote");
 
-  // Renders the current state of `arr` as visual boxes
   function draw() {
     track.innerHTML = arr
       .map(
@@ -80,7 +79,7 @@ function renderArrayAnimation() {
       .join("");
   }
 
-  draw(); // initial render
+  draw();
 
   document.getElementById("insertBtn").addEventListener("click", () => {
     const value = document.getElementById("insertValue").value;
@@ -89,10 +88,9 @@ function renderArrayAnimation() {
       return;
     }
 
-    arr.push(value); // add to the end — mirrors real array append behavior
+    arr.push(value);
     draw();
 
-    // Briefly highlight the newly added box to draw attention to it
     const boxes = document.querySelectorAll(".array-box");
     const newBox = boxes[boxes.length - 1];
     newBox.classList.add("just-added");
@@ -110,7 +108,6 @@ function renderArrayAnimation() {
       return;
     }
 
-    // Remove any previous highlight, then highlight the accessed box
     document.querySelectorAll(".array-box").forEach((b) => b.classList.remove("highlighted"));
     const box = document.querySelector(`.array-box[data-index="${index}"]`);
     box.classList.add("highlighted");
@@ -119,38 +116,125 @@ function renderArrayAnimation() {
   });
 }
 
-const lessonSchema = new mongoose.Schema(
-  {
-    title: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    course: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Course",
-      required: true,
-    },
-    order: {
-      type: Number,
-      default: 0,
-    },
-    content: {
-      type: String,
-      required: true,
-    },
-    hasAnimation: {
-      type: Boolean,
-      default: false,
-    },
-    // Reserved for future AI-narrated video lessons — not used yet
-    videoUrl: {
-      type: String,
-      default: "",
-    },
-  },
-  { timestamps: true }
-);
+// ----------------------
+// QUIZ SECTION
+// ----------------------
 
+async function loadQuiz(lessonId) {
+  const quizSlot = document.getElementById("quizSlot");
+
+  try {
+    const response = await fetch(`http://localhost:5000/api/questions/lesson/${lessonId}`);
+    const questions = await response.json();
+
+    if (!response.ok || questions.length === 0) {
+      quizSlot.innerHTML = "<p>No quiz available for this lesson yet.</p>";
+      return;
+    }
+
+    // Build the quiz form — one block per question, radio buttons for options
+    quizSlot.innerHTML = `
+      <div class="quiz-widget">
+        <h3>Quick Check</h3>
+        <form id="quizForm">
+          ${questions
+            .map(
+              (q, qIndex) => `
+            <div class="quiz-question" data-question-id="${q._id}">
+              <p class="quiz-question-text">${qIndex + 1}. ${q.questionText}</p>
+              ${q.options
+                .map(
+                  (opt, optIndex) => `
+                <label class="quiz-option">
+                  <input type="radio" name="q_${q._id}" value="${optIndex}" required />
+                  ${opt}
+                </label>
+              `
+                )
+                .join("")}
+            </div>
+          `
+            )
+            .join("")}
+          <button type="submit">Submit Quiz</button>
+        </form>
+        <div id="quizResults"></div>
+      </div>
+    `;
+
+    document.getElementById("quizForm").addEventListener("submit", (e) => submitQuiz(e, lessonId));
+  } catch (error) {
+    quizSlot.innerHTML = "<p>Could not load quiz.</p>";
+  }
+}
+
+async function submitQuiz(e, lessonId) {
+  e.preventDefault();
+
+  const token = localStorage.getItem("token");
+  if (!token) {
+    alert("Please log in to submit the quiz.");
+    window.location.href = "login.html";
+    return;
+  }
+
+  // Gather all selected answers from the form
+  const questionBlocks = document.querySelectorAll(".quiz-question");
+  const answers = [];
+
+  questionBlocks.forEach((block) => {
+    const questionId = block.dataset.questionId;
+    const selected = block.querySelector(`input[name="q_${questionId}"]:checked`);
+    if (selected) {
+      answers.push({ questionId, selectedIndex: parseInt(selected.value) });
+    }
+  });
+
+  try {
+    const response = await fetch("http://localhost:5000/api/questions/submit", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`, // attach the JWT so the backend knows who's submitting
+      },
+      body: JSON.stringify({ lessonId, answers }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      alert(data.message || "Submission failed");
+      return;
+    }
+
+    displayResults(data);
+  } catch (error) {
+    alert("Something went wrong submitting the quiz.");
+  }
+}
+
+function displayResults(data) {
+  const resultsDiv = document.getElementById("quizResults");
+
+  resultsDiv.innerHTML = `
+    <div class="quiz-score">
+      Score: ${data.score} / ${data.totalQuestions}
+    </div>
+    ${data.results
+      .map(
+        (r) => `
+      <div class="quiz-result-item ${r.isCorrect ? "correct" : "incorrect"}">
+        <p>${r.questionText}</p>
+        <p>${r.isCorrect ? "✅ Correct" : "❌ Incorrect"}</p>
+        <p class="quiz-explanation">${r.explanation}</p>
+      </div>
+    `
+      )
+      .join("")}
+  `;
+
+  // Hide the form now that results are shown
+  document.getElementById("quizForm").style.display = "none";
+}
 
 loadLesson();
