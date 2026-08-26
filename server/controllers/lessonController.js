@@ -51,4 +51,19 @@ const getLessonById = async (req, res) => {
   }
 };
 
-module.exports = { createLesson, getLessons, getLessonById }; 
+// DELETE /api/lessons/:id
+const deleteLesson = async (req, res) => {
+  try {
+    const lesson = await Lesson.findByIdAndDelete(req.params.id);
+
+    if (!lesson) {
+      return res.status(404).json({ message: "Lesson not found" });
+    }
+
+    res.status(200).json({ message: "Lesson deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+module.exports = { createLesson, getLessons, getLessonById, deleteLesson };
