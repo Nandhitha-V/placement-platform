@@ -331,3 +331,40 @@ body {
   color: #a5b4fc;
   font-weight: bold;
 }
+
+.lessons-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 0 2rem;
+}
+
+.lessons-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.lesson-card {
+  background: #1e293b;
+  border-radius: 10px;
+  padding: 1.5rem;
+  text-decoration: none;
+  color: white;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.lesson-card:hover {
+  transform: translateY(-3px);
+  background: #273449;
+}
+
+.lesson-card h3 {
+  margin-bottom: 0.5rem;
+  color: #a5b4fc;
+}
+
+.lesson-card p {
+  color: #94a3b8;
+  font-size: 0.9rem;
+}
