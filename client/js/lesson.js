@@ -32,6 +32,8 @@ async function loadLesson() {
 
     if (lesson.title === "Arrays") {
       renderArrayAnimation();
+    } else if (lesson.title === "Stacks") {
+      renderStackAnimation();
     }
 
     loadQuiz(lessonId);
@@ -113,6 +115,72 @@ function renderArrayAnimation() {
     box.classList.add("highlighted");
 
     note.textContent = `arr[${index}] = ${arr[index]} — accessed instantly (O(1) time).`;
+  });
+}
+
+// Builds and wires up the interactive stack visualization
+function renderStackAnimation() {
+  const slot = document.getElementById("animationSlot");
+
+  slot.innerHTML = `
+    <div class="array-widget">
+      <h3>Try it: Stack Visualization</h3>
+      <div class="stack-track" id="stackTrack"></div>
+
+      <div class="array-controls">
+        <input type="text" id="pushValue" placeholder="Value to push" />
+        <button id="pushBtn">Push</button>
+        <button id="popBtn">Pop</button>
+      </div>
+
+      <p class="array-note" id="stackNote"></p>
+    </div>
+  `;
+
+  let stack = [5, 15, 25]; // bottom to top: 5 is at the bottom, 25 is on top
+
+  const track = document.getElementById("stackTrack");
+  const note = document.getElementById("stackNote");
+
+  function draw() {
+    // We render in REVERSE so the top of the stack visually appears at the top of the screen
+    track.innerHTML = [...stack]
+      .reverse()
+      .map(
+        (val, i) => `
+        <div class="stack-box ${i === 0 ? "top-box" : ""}">
+          ${val} ${i === 0 ? '<span class="top-label">← top</span>' : ""}
+        </div>
+      `
+      )
+      .join("");
+  }
+
+  draw();
+
+  document.getElementById("pushBtn").addEventListener("click", () => {
+    const value = document.getElementById("pushValue").value;
+    if (value === "") {
+      note.textContent = "Enter a value first.";
+      return;
+    }
+
+    stack.push(value); // JS arrays already have push/pop built in — matches the concept directly
+    draw();
+
+    note.textContent = `Pushed "${value}" onto the stack.`;
+    document.getElementById("pushValue").value = "";
+  });
+
+  document.getElementById("popBtn").addEventListener("click", () => {
+    if (stack.length === 0) {
+      note.textContent = "Stack is empty — nothing to pop.";
+      return;
+    }
+
+    const removed = stack.pop();
+    draw();
+    note.textContent = `Popped "${removed}" from the top.`;
   });
 }
 
