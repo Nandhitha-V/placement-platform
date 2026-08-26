@@ -6,26 +6,17 @@
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
-  <div style="padding: 3rem; text-align: center;">
-    <h2 id="welcomeMsg">Loading...</h2>
-    <button onclick="logout()">Logout</button>
-  </div>
+  <header class="navbar">
+    <h1 class="logo">PlacementPlatform</h1>
+    <nav>
+      <button onclick="logout()" class="btn-primary">Logout</button>
+    </nav>
+  </header>
 
-  <script>
-    // Basic protection: if no token, kick back to login
-    const token = localStorage.getItem("token");
-    if (!token) {
-      window.location.href = "login.html";
-    }
+  <main class="dashboard-container" id="dashboardContainer">
+    <p>Loading your dashboard...</p>
+  </main>
 
-    const user = JSON.parse(localStorage.getItem("user"));
-    document.getElementById("welcomeMsg").textContent = `Welcome, ${user.name}!`;
-
-    function logout() {
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
-      window.location.href = "login.html";
-    }
-  </script>
+  <script src="js/dashboard.js"></script>
 </body>
 </html>
