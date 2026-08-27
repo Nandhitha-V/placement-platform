@@ -66,4 +66,22 @@ const deleteLesson = async (req, res) => {
   }
 };
 
-module.exports = { createLesson, getLessons, getLessonById, deleteLesson };
+// PUT /api/lessons/:id — update an existing lesson
+const updateLesson = async (req, res) => {
+  try {
+    const lesson = await Lesson.findByIdAndUpdate(req.params.id, req.body, {
+      new: true, // return the UPDATED document, not the old one
+      runValidators: true, // still enforce schema rules on update
+    });
+
+    if (!lesson) {
+      return res.status(404).json({ message: "Lesson not found" });
+    }
+
+    res.status(200).json(lesson);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+module.exports = { createLesson, getLessons, getLessonById, deleteLesson, updateLesson };
