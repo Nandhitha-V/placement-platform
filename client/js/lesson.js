@@ -40,6 +40,8 @@ async function loadLesson() {
       renderPercentageCalculator();
     } else if (lesson.title === "Profit and Loss") {
       renderProfitLossCalculator();
+    } else if (lesson.title === "Professional Email Etiquette") {
+      renderEmailExercise();
     }
 
     loadQuiz(lessonId);
@@ -346,6 +348,66 @@ function renderProfitLossCalculator() {
     }
   });
 }
+
+function renderEmailExercise() {
+  const slot = document.getElementById("animationSlot");
+
+  const weakEmail = "hey i wanted to ask if the interview is still on for tomorrow let me know thanks";
+
+  const issues = [
+    { label: "No proper greeting", found: false },
+    { label: "No capitalization", found: false },
+    { label: "Vague / no clear closing", found: false },
+    { label: "No specific time mentioned", found: false },
+  ];
+
+  slot.innerHTML = `
+    <div class="array-widget">
+      <h3>Try it: Spot the Issues</h3>
+      <p style="color: var(--text-secondary); margin-bottom: 1rem; font-size: 0.9rem;">
+        Here's a real (weak) email draft. Click each issue below that you can identify in it.
+      </p>
+
+      <p style="background: var(--bg-base); padding: 1rem; border-radius: 8px; font-style: italic; border: 1px solid var(--border-subtle); margin-bottom: 1.2rem;">
+        "${weakEmail}"
+      </p>
+
+      <div id="issueList"></div>
+      <p class="array-note" id="exerciseNote"></p>
+    </div>
+  `;
+
+  const issueList = document.getElementById("issueList");
+  const note = document.getElementById("exerciseNote");
+
+  function drawIssues() {
+    issueList.innerHTML = issues
+      .map(
+        (issue, i) => `
+      <div class="quiz-option" data-index="${i}" style="cursor:pointer; ${issue.found ? "border-color: var(--accent-primary);" : ""}">
+        ${issue.found ? "✅" : "▢"} ${issue.label}
+      </div>
+    `
+      )
+      .join("");
+
+    document.querySelectorAll("#issueList .quiz-option").forEach((el) => {
+      el.addEventListener("click", () => {
+        const index = parseInt(el.dataset.index);
+        issues[index].found = true;
+        drawIssues();
+
+        const allFound = issues.every((i) => i.found);
+        note.textContent = allFound
+          ? "You found every issue — exactly what a hiring manager would notice too."
+          : `${issues.filter((i) => i.found).length} of ${issues.length} identified.`;
+      });
+    });
+  }
+
+  drawIssues();
+}
+
 
 // ----------------------
 // QUIZ SECTION
