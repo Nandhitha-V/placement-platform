@@ -38,6 +38,8 @@ async function loadLesson() {
       renderQueueAnimation();
     } else if (lesson.title === "Percentages") {
       renderPercentageCalculator();
+    } else if (lesson.title === "Profit and Loss") {
+      renderProfitLossCalculator();
     }
 
     loadQuiz(lessonId);
@@ -299,6 +301,52 @@ function renderPercentageCalculator() {
     `;
   });
 }
+
+function renderProfitLossCalculator() {
+  const slot = document.getElementById("animationSlot");
+
+  slot.innerHTML = `
+    <div class="array-widget">
+      <h3>Try it: Profit / Loss Calculator</h3>
+      <p style="color: var(--text-secondary); margin-bottom: 1rem; font-size: 0.9rem;">
+        Enter Cost Price and Selling Price to see the result.
+      </p>
+
+      <div class="array-controls">
+        <input type="number" id="cpInput" placeholder="Cost Price" />
+        <input type="number" id="spInput" placeholder="Selling Price" />
+      </div>
+
+      <button id="plCalcBtn" style="margin-top: 0.5rem;">Calculate</button>
+
+      <p class="array-note" id="plResult"></p>
+    </div>
+  `;
+
+  document.getElementById("plCalcBtn").addEventListener("click", () => {
+    const cp = parseFloat(document.getElementById("cpInput").value);
+    const sp = parseFloat(document.getElementById("spInput").value);
+    const result = document.getElementById("plResult");
+
+    if (isNaN(cp) || isNaN(sp) || cp <= 0) {
+      result.textContent = "Enter valid Cost Price and Selling Price.";
+      return;
+    }
+
+    if (sp > cp) {
+      const profit = sp - cp;
+      const profitPercent = ((profit / cp) * 100).toFixed(2);
+      result.innerHTML = `Profit: <strong style="color: var(--accent-primary);">₹${profit}</strong> (${profitPercent}%)`;
+    } else if (sp < cp) {
+      const loss = cp - sp;
+      const lossPercent = ((loss / cp) * 100).toFixed(2);
+      result.innerHTML = `Loss: <strong style="color: var(--accent-secondary);">₹${loss}</strong> (${lossPercent}%)`;
+    } else {
+      result.innerHTML = `No profit, no loss — break-even.`;
+    }
+  });
+}
+
 // ----------------------
 // QUIZ SECTION
 // ----------------------
