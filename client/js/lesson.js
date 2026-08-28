@@ -34,6 +34,8 @@ async function loadLesson() {
       renderArrayAnimation();
     } else if (lesson.title === "Stacks") {
       renderStackAnimation();
+    } else if (lesson.title === "Queues") {
+      renderQueueAnimation();
     }
 
     loadQuiz(lessonId);
@@ -184,6 +186,76 @@ function renderStackAnimation() {
   });
 }
 
+
+// Builds and wires up the interactive queue visualization
+function renderQueueAnimation() {
+  const slot = document.getElementById("animationSlot");
+
+  slot.innerHTML = `
+    <div class="array-widget">
+      <h3>Try it: Queue Visualization</h3>
+      <div class="array-track" id="queueTrack"></div>
+
+      <div class="array-controls">
+        <input type="text" id="enqueueValue" placeholder="Value to enqueue" />
+        <button id="enqueueBtn">Enqueue</button>
+        <button id="dequeueBtn">Dequeue</button>
+      </div>
+
+      <p class="array-note" id="queueNote"></p>
+    </div>
+  `;
+
+  let queue = [7, 14, 21]; // front is index 0, back is the last index
+
+  const track = document.getElementById("queueTrack");
+  const note = document.getElementById("queueNote");
+
+  function draw() {
+    track.innerHTML = queue
+      .map(
+        (val, i) => `
+        <div class="array-box ${i === 0 ? "highlighted" : ""}">
+          <div class="array-value">${val}</div>
+          <div class="array-index">${i === 0 ? "front" : i === queue.length - 1 ? "back" : ""}</div>
+        </div>
+      `
+      )
+      .join("");
+  }
+
+  draw();
+
+  document.getElementById("enqueueBtn").addEventListener("click", () => {
+    const value = document.getElementById("enqueueValue").value;
+    if (value === "") {
+      note.textContent = "Enter a value first.";
+      return;
+    }
+
+    queue.push(value); // add to the back
+    draw();
+
+    const boxes = document.querySelectorAll("#queueTrack .array-box");
+    const newBox = boxes[boxes.length - 1];
+    newBox.classList.add("just-added");
+    setTimeout(() => newBox.classList.remove("just-added"), 600);
+
+    note.textContent = `Enqueued "${value}" at the back.`;
+    document.getElementById("enqueueValue").value = "";
+  });
+
+  document.getElementById("dequeueBtn").addEventListener("click", () => {
+    if (queue.length === 0) {
+      note.textContent = "Queue is empty — nothing to dequeue.";
+      return;
+    }
+
+    const removed = queue.shift(); // remove from the front
+    draw();
+    note.textContent = `Dequeued "${removed}" from the front.`;
+  });
+}
 // ----------------------
 // QUIZ SECTION
 // ----------------------
