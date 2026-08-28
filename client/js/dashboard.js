@@ -64,7 +64,7 @@ function renderDashboard(data) {
       }
     </div>
 
-    <a href="lessons.html" class="btn-primary" style="display:inline-block; margin-top: 1.5rem;">
+    <a href="categories.html" class="btn-primary" style="display:inline-block; margin-top: 1.5rem;">
       Continue Learning
     </a>
   `;

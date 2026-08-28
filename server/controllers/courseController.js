@@ -17,11 +17,15 @@ const createCourse = async (req, res) => {
   }
 };
 
-// GET /api/courses — fetch all courses, with category data filled in
+// GET /api/courses — fetch all courses, optionally filtered by category
 const getCourses = async (req, res) => {
   try {
-    // .populate("category") replaces the category ObjectId with the actual Category document
-    const courses = await Course.find().populate("category");
+    const filter = {};
+    if (req.query.category) {
+      filter.category = req.query.category; // e.g. /api/courses?category=CATEGORY_ID
+    }
+
+    const courses = await Course.find(filter).populate("category");
     res.status(200).json(courses);
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });

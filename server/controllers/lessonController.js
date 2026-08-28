@@ -17,11 +17,15 @@ const createLesson = async (req, res) => {
   }
 };
 
-// GET /api/lessons — fetch all lessons, with course (and its category) filled in
+// GET /api/lessons — fetch all lessons, optionally filtered by course
 const getLessons = async (req, res) => {
   try {
-    // Nested populate: fill in "course", and inside that, also fill in "category"
-    const lessons = await Lesson.find().populate({
+    const filter = {};
+    if (req.query.course) {
+      filter.course = req.query.course; // e.g. /api/lessons?course=COURSE_ID
+    }
+
+    const lessons = await Lesson.find(filter).populate({
       path: "course",
       populate: { path: "category" },
     });
