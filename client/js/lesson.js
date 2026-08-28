@@ -36,6 +36,8 @@ async function loadLesson() {
       renderStackAnimation();
     } else if (lesson.title === "Queues") {
       renderQueueAnimation();
+    } else if (lesson.title === "Percentages") {
+      renderPercentageCalculator();
     }
 
     loadQuiz(lessonId);
@@ -254,6 +256,47 @@ function renderQueueAnimation() {
     const removed = queue.shift(); // remove from the front
     draw();
     note.textContent = `Dequeued "${removed}" from the front.`;
+  });
+}
+
+// A live percentage calculator — the "animation equivalent" for a math-based lesson
+function renderPercentageCalculator() {
+  const slot = document.getElementById("animationSlot");
+
+  slot.innerHTML = `
+    <div class="array-widget">
+      <h3>Try it: Percentage Calculator</h3>
+      <p style="color: var(--text-secondary); margin-bottom: 1rem; font-size: 0.9rem;">
+        Find what X% of Y is — see the formula applied live.
+      </p>
+
+      <div class="array-controls">
+        <input type="number" id="percentInput" placeholder="Percentage (e.g. 40)" />
+        <span style="align-self:center;">% of</span>
+        <input type="number" id="wholeInput" placeholder="Whole number (e.g. 250)" />
+      </div>
+
+      <button id="calcBtn" style="margin-top: 0.5rem;">Calculate</button>
+
+      <p class="array-note" id="calcResult"></p>
+    </div>
+  `;
+
+  document.getElementById("calcBtn").addEventListener("click", () => {
+    const percent = parseFloat(document.getElementById("percentInput").value);
+    const whole = parseFloat(document.getElementById("wholeInput").value);
+    const result = document.getElementById("calcResult");
+
+    if (isNaN(percent) || isNaN(whole)) {
+      result.textContent = "Enter both values first.";
+      return;
+    }
+
+    const answer = (percent * whole) / 100;
+
+    result.innerHTML = `
+      (${percent} × ${whole}) / 100 = <strong style="color: var(--accent-primary);">${answer}</strong>
+    `;
   });
 }
 // ----------------------
