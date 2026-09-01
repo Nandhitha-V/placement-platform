@@ -10,20 +10,25 @@ async function loadCourses() {
     const courses = await response.json();
 
     container.innerHTML = `
-      <h2>${categoryName}</h2>
-      <div class="lessons-grid">
-        ${courses
-          .map(
-            (course) => `
-          <a href="lessons.html?courseId=${course._id}&courseName=${encodeURIComponent(course.title)}" class="lesson-card">
-            <h3>${course.title}</h3>
-            <p>${course.description}</p>
-          </a>
-        `
-          )
-          .join("")}
-      </div>
-    `;
+  <nav class="breadcrumb-nav">
+    <a href="home.html">Home</a>
+    <span class="separator">›</span>
+    <span class="current">${categoryName}</span>
+  </nav>
+  <h2>${categoryName}</h2>
+  <div class="lessons-grid">
+    ${courses
+      .map(
+        (course) => `
+      <a href="lessons.html?courseId=${course._id}&courseName=${encodeURIComponent(course.title)}&categoryId=${categoryId}&categoryName=${encodeURIComponent(categoryName)}" class="lesson-card">
+        <h3>${course.title}</h3>
+        <p>${course.description}</p>
+      </a>
+    `
+      )
+      .join("")}
+  </div>
+`;
   } catch (error) {
     container.innerHTML = "<p>Something went wrong.</p>";
   }

@@ -623,3 +623,31 @@ a {
 .profile-icon:hover {
   background: var(--bg-surface-hover);
 }
+
+.breadcrumb-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.breadcrumb-nav a {
+  color: var(--accent-primary);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.breadcrumb-nav a:hover {
+  text-decoration: underline;
+}
+
+.breadcrumb-nav .separator {
+  color: var(--text-secondary);
+}
+
+.breadcrumb-nav .current {
+  color: var(--text-secondary);
+  font-weight: 500;
+}

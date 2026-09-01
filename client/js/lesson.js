@@ -20,15 +20,29 @@ async function loadLesson() {
       return;
     }
 
-    container.innerHTML = `
-      <p class="breadcrumb">${lesson.course.category.name} / ${lesson.course.title}</p>
-      <h1>${lesson.title}</h1>
-      <div class="lesson-content">
-        <p>${lesson.content}</p>
-      </div>
-      <div id="animationSlot"></div>
-      <div id="quizSlot"></div>
-    `;
+    const params2 = new URLSearchParams(window.location.search);
+const categoryId = params2.get("categoryId") || lesson.course.category._id;
+const categoryName = params2.get("categoryName") || lesson.course.category.name;
+const courseId = params2.get("courseId") || lesson.course._id;
+const courseName = params2.get("courseName") || lesson.course.title;
+
+container.innerHTML = `
+  <nav class="breadcrumb-nav">
+    <a href="home.html">Home</a>
+    <span class="separator">›</span>
+    <a href="courses.html?categoryId=${categoryId}&categoryName=${encodeURIComponent(categoryName)}">${categoryName}</a>
+    <span class="separator">›</span>
+    <a href="lessons.html?courseId=${courseId}&courseName=${encodeURIComponent(courseName)}&categoryId=${categoryId}&categoryName=${encodeURIComponent(categoryName)}">${courseName}</a>
+    <span class="separator">›</span>
+    <span class="current">${lesson.title}</span>
+  </nav>
+  <h1>${lesson.title}</h1>
+  <div class="lesson-content">
+    <p>${lesson.content}</p>
+  </div>
+  <div id="animationSlot"></div>
+  <div id="quizSlot"></div>
+`;
 
     if (lesson.title === "Arrays") {
       renderArrayAnimation();
