@@ -25,7 +25,7 @@ form.addEventListener("submit", async (e) => {
     localStorage.setItem("token", data.token);
     localStorage.setItem("user", JSON.stringify({ name: data.name, email: data.email }));
 
-    window.location.href = "dashboard.html";
+    window.location.href = "home.html";
   } catch (error) {
     errorMsg.textContent = "Something went wrong. Is the server running?";
   }

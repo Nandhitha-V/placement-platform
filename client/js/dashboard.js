@@ -46,7 +46,25 @@ function renderDashboard(data) {
       </div>
     </div>
 
-    <h3>Your Progress</h3>
+    <h3>Category Progress</h3>
+    <div class="progress-list">
+      ${
+        data.categoryProgress.length === 0
+          ? "<p>No category progress yet — start a lesson to see stats here.</p>"
+          : data.categoryProgress
+              .map(
+                (c) => `
+          <div class="progress-item">
+            <span>${c.icon} ${c.name} — ${c.lessonsCompleted} lesson(s)</span>
+            <span class="progress-score">${c.accuracy}%</span>
+          </div>
+        `
+              )
+              .join("")
+      }
+    </div>
+
+    <h3>Lesson-by-Lesson Progress</h3>
     <div class="progress-list">
       ${
         data.lessonProgress.length === 0

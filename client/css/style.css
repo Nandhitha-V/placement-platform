@@ -611,3 +611,15 @@ a {
   font-size: 0.88rem;
   margin-top: 0.5rem;
 }
+
+.profile-icon {
+  font-size: 1.3rem;
+  text-decoration: none;
+  padding: 0.3rem 0.5rem;
+  border-radius: 50%;
+  transition: background 0.2s ease;
+}
+
+.profile-icon:hover {
+  background: var(--bg-surface-hover);
+}
