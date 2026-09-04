@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Profile</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header class="navbar">
+    <a href="home.html" class="logo">PlacementPlatform</a>
+    <nav>
+      <a href="home.html">Home</a>
+      <a href="categories.html">Categories</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="profile.html" class="profile-icon" title="Profile">👤</a>
+    </nav>
+  </header>
+
+  <main class="dashboard-container">
+    <h2>Your Profile</h2>
+
+    <div class="auth-container" style="margin: 1.5rem 0;">
+      <h2 style="font-size: 1.1rem;">Account Details</h2>
+      <p class="error-message" id="profileMsg"></p>
+      <form id="profileForm">
+        <input type="text" id="profileName" placeholder="Full Name" required />
+        <input type="email" id="profileEmail" disabled />
+        <button type="submit">Save Changes</button>
+      </form>
+    </div>
+
+    <div class="auth-container" style="margin: 1.5rem 0;">
+      <h2 style="font-size: 1.1rem;">Change Password</h2>
+      <p class="error-message" id="passwordMsg"></p>
+      <form id="passwordForm">
+        <input type="password" id="currentPassword" placeholder="Current Password" required />
+        <input type="password" id="newPassword" placeholder="New Password" required />
+        <button type="submit">Update Password</button>
+      </form>
+    </div>
+
+    <button onclick="logout()" style="margin-top:1rem;" class="btn-primary">Logout</button>
+  </main>
+
+  <script src="js/profile.js"></script>
+</body>
+</html>
