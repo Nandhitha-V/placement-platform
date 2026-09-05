@@ -56,6 +56,8 @@ container.innerHTML = `
       renderProfitLossCalculator();
     } else if (lesson.title === "Professional Email Etiquette") {
       renderEmailExercise();
+    } else if (lesson.title === "Handling Criticism at Work") {
+      renderScenarioExercise();
     }
 
     loadQuiz(lessonId);
@@ -420,6 +422,68 @@ function renderEmailExercise() {
   }
 
   drawIssues();
+}
+
+function renderScenarioExercise() {
+  const slot = document.getElementById("animationSlot");
+
+  const scenario = "Your manager reviews your work and says: 'This report has some good data, but it's really hard to follow — I can't tell what the main conclusion is.'";
+
+  const choices = [
+    {
+      text: "\"I spent a lot of time on this, the data is all accurate.\"",
+      feedback: "This is defensive — it responds to a concern about clarity by talking about effort and accuracy, which weren't the actual issue raised.",
+      good: false,
+    },
+    {
+      text: "\"You're right, I focused on gathering data but didn't structure the conclusion clearly. Can I revise it and highlight the key takeaway at the top?\"",
+      feedback: "Strong response — acknowledges the specific point, doesn't get defensive, and proposes a concrete next step.",
+      good: true,
+    },
+    {
+      text: "\"Sorry, I'll try to do better next time.\"",
+      feedback: "This is vague and passive — it doesn't show you understood the specific issue or have a plan to address it.",
+      good: false,
+    },
+  ];
+
+  slot.innerHTML = `
+    <div class="array-widget">
+      <h3>Try it: What Would You Do?</h3>
+      <p style="background: var(--bg-base); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-subtle); margin-bottom: 1.2rem;">
+        ${scenario}
+      </p>
+      <div id="choiceList"></div>
+      <div id="scenarioFeedback" style="margin-top: 1rem;"></div>
+    </div>
+  `;
+
+  const choiceList = document.getElementById("choiceList");
+  const feedbackDiv = document.getElementById("scenarioFeedback");
+
+  choiceList.innerHTML = choices
+    .map(
+      (choice, i) => `
+    <div class="quiz-option" data-index="${i}" style="cursor:pointer;">
+      ${choice.text}
+    </div>
+  `
+    )
+    .join("");
+
+  document.querySelectorAll("#choiceList .quiz-option").forEach((el) => {
+    el.addEventListener("click", () => {
+      const index = parseInt(el.dataset.index);
+      const choice = choices[index];
+
+      feedbackDiv.innerHTML = `
+        <div class="quiz-result-item ${choice.good ? "correct" : "incorrect"}">
+          <p>${choice.good ? "✅ Strong choice" : "⚠️ Worth reconsidering"}</p>
+          <p class="quiz-explanation">${choice.feedback}</p>
+        </div>
+      `;
+    });
+  });
 }
 
 
